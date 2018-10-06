@@ -23,7 +23,11 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public void updateUser(User user) {
+    public void updateUser(User user) throws DuplicateUserException {
+        User userFromDb = this.getUserByUserName(user.getUserName());
+        if (userFromDb != null && userFromDb.getId() != user.getId())
+            throw new DuplicateUserException("Duplicate User by userName: \"" + user.getUserName() + "\"");
+
         Session session = SessionHolder.get();
         session.update(user);
     }

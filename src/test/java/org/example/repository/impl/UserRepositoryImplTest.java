@@ -69,16 +69,40 @@ public class UserRepositoryImplTest extends AbstractHibernateTest {
         String password = "query";
 
         User userCreated = UserUtil.createUserWithoutId(userName, firstName, lastName, password);
-        User userExpected = UserUtil.createUserWithoutId("second", "second", "second", "123");
-
-        int id = userRepository.createUser(userCreated);
-        userExpected.setId(id);
+        int idUserForUpdate = userRepository.createUser(userCreated);
 
         commitAndReopenSession();
 
+        User userExpected = UserUtil.createUserWithoutId("second", "second", "second", "123");
+        userExpected.setId(idUserForUpdate);
         userRepository.updateUser(userExpected);
 
-        User actualUser = userRepository.getUser(id);
+        User actualUser = userRepository.getUser(idUserForUpdate);
+        assertThat(actualUser, equalTo(userExpected));
+    }
+
+    @Test(expected = DuplicateUserException.class)
+    public void updateUser_WhenExistUserName() throws DuplicateUserException, NotExistUserException {
+        String userName = "newUser";
+        String firstName = "first";
+        String lastName = "last";
+        String password = "query";
+
+        String existUserName = "exist_user_name";
+
+        User firstUser = UserUtil.createUserWithoutId(existUserName, "1", "1", "123");
+        userRepository.createUser(firstUser);
+
+        User userCreated = UserUtil.createUserWithoutId(userName, firstName, lastName, password);
+        int idUserForUpdate = userRepository.createUser(userCreated);
+
+        commitAndReopenSession();
+
+        User userExpected = UserUtil.createUserWithoutId(existUserName, "second", "second", "123");
+        userExpected.setId(idUserForUpdate);
+        userRepository.updateUser(userExpected);
+
+        User actualUser = userRepository.getUser(idUserForUpdate);
         assertThat(actualUser, equalTo(userExpected));
     }
 
