@@ -37,6 +37,8 @@ public class UserRepositoryImplTest extends AbstractHibernateTest {
 
         userRepository.deleteUser(forDeleteUser);
 
+        flushAndClearSession();
+
         User userFromDb = userRepository.getUser(id);
         assertThat(userFromDb, equalTo(null));
     }
@@ -45,6 +47,8 @@ public class UserRepositoryImplTest extends AbstractHibernateTest {
     public void deleteUser_WhenNotExistUserId() throws NotExistUserException {
         User userCreated = getUserByDefault();
         userCreated.setId(1);
+
+        flushAndClearSession();
 
         userRepository.deleteUser(userCreated);
     }
@@ -119,8 +123,9 @@ public class UserRepositoryImplTest extends AbstractHibernateTest {
         User expectedUser = UserUtil.createUserWithoutId(userName, firstName, lastName, password);
         userRepository.createUser(expectedUser);
 
-        User userFromDb = userRepository.getUserByUserName(userName);
+        flushAndClearSession();
 
+        User userFromDb = userRepository.getUserByUserName(userName);
         assertThat(userFromDb, equalTo(expectedUser));
     }
 

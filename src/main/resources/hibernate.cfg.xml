@@ -17,7 +17,7 @@
         <property name="show_sql">false</property>
 
         <property name="hibernate.id.new_generator_mappings">false</property>
-        <property name="hibernate.hbm2ddl.auto">create</property><!-- creates schema from entities each app deploy  -->
+        <property name="hibernate.hbm2ddl.auto">validate</property><!-- creates schema from entities each app deploy  -->
 
         <!-- List of XML mapping files -->
         <mapping resource="org/example/entity/User.hbm.xml"/>

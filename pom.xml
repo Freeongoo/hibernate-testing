@@ -65,6 +65,12 @@
             <version>1.4.197</version>
         </dependency>
 
+        <dependency>
+            <groupId>p6spy</groupId>
+            <artifactId>p6spy</artifactId>
+            <version>3.7.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>
