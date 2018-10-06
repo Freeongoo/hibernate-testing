@@ -34,3 +34,7 @@ assertThat(actualUser, equalTo(userExpected));
 ```
 
 Without `flushAndClearSession()` will throw: `org.hibernate.NonUniqueObjectException: A different object with the same identifier value was already associated with the session`
+
+### Tests
+
+Run tests and after open file `test.log` for analyse sql queries
