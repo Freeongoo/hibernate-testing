@@ -37,10 +37,7 @@ public class UserRepositoryImplTest extends AbstractHibernateTest {
 
         userRepository.deleteUser(forDeleteUser);
 
-        commitAndReopenSession();
-
         User userFromDb = userRepository.getUser(id);
-
         assertThat(userFromDb, equalTo(null));
     }
 
@@ -57,7 +54,7 @@ public class UserRepositoryImplTest extends AbstractHibernateTest {
         User userCreated = getUserByDefault();
         int idUserForUpdate = userRepository.createUser(userCreated);
 
-        commitAndReopenSession();
+        flushAndClearSession();
 
         User userExpected = UserUtil.createUserWithoutId("second", "second", "second", "123");
         userExpected.setId(idUserForUpdate);
@@ -77,7 +74,7 @@ public class UserRepositoryImplTest extends AbstractHibernateTest {
         User userCreated = UserUtil.createUserWithoutId(userName, firstName, lastName, password);
         int idUserForUpdate = userRepository.createUser(userCreated);
 
-        commitAndReopenSession();
+        flushAndClearSession();
 
         User userExpected = UserUtil.createUserWithoutId(userName, "second", lastName, password);
         userExpected.setId(idUserForUpdate);
@@ -102,7 +99,7 @@ public class UserRepositoryImplTest extends AbstractHibernateTest {
         User userCreated = UserUtil.createUserWithoutId(userName, firstName, lastName, password);
         int idUserForUpdate = userRepository.createUser(userCreated);
 
-        commitAndReopenSession();
+        flushAndClearSession();
 
         User userExpected = UserUtil.createUserWithoutId(existUserName, "second", "second", "123");
         userExpected.setId(idUserForUpdate);

@@ -2,8 +2,6 @@ package org.example;
 
 import org.example.persistance.HibernateUtil;
 import org.example.persistance.SessionHolder;
-import org.example.repository.UserRepository;
-import org.example.repository.impl.UserRepositoryImpl;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.After;
@@ -23,7 +21,6 @@ public abstract class AbstractHibernateTest {
     @Before
     public void setUp() {
         beginSessionTransactionAndSaveToHolder();
-        clearDB();
     }
 
     @After
@@ -38,26 +35,20 @@ public abstract class AbstractHibernateTest {
         }
     }
 
-    // TODO: don't forget to add a call to delete methods when adding a new Entity
-    private void clearDB() {
-        UserRepository userRepository = new UserRepositoryImpl();
-        userRepository.deleteAll();
-    }
-
     private void beginSessionTransactionAndSaveToHolder() {
         session = sessionFactory.openSession();
         session.beginTransaction();
         SessionHolder.set(session);
     }
 
-    protected void commitAndReopenSession() {
-        sessionCommitAndClose();
-        beginSessionTransactionAndSaveToHolder();
-    }
-
     private void sessionCommitAndClose() {
-        session.getTransaction().commit();
+        session.getTransaction().rollback();
         session.close();
         SessionHolder.set(null);
+    }
+
+    protected void flushAndClearSession() {
+        session.flush();
+        session.clear();
     }
 }
