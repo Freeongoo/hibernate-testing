@@ -1,18 +1,20 @@
 package org.example.HQL.impl;
 
 import org.example.AbstractHibernateTest;
+import org.example.entity.User;
 import org.example.exception.DuplicateUserException;
 import org.example.exception.NotExistUserException;
 import org.example.repository.UserRepository;
-import org.example.entity.User;
 import org.example.repository.hql.UserRepositoryHql;
 import org.example.util.UserUtil;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.junit.Assert.assertThat;
 
 public class UserRepositoryHqlTest extends AbstractHibernateTest {
     private UserRepository userRepository;
@@ -54,18 +56,23 @@ public class UserRepositoryHqlTest extends AbstractHibernateTest {
     @Test
     // TODO: Cannot testing when create new user and try update it. Working when update existing user in DB
     public void updateUser() throws DuplicateUserException, NotExistUserException {
-        int idAdmin = 1;
         String userName = "newUser";
         String firstName = "first";
         String lastName = "last";
         String password = "query";
 
-        User userForUpdate = UserUtil.createUser(idAdmin, userName, firstName, lastName, password);
-        userRepository.updateUser(idAdmin, userForUpdate);
+        User userCreated = UserUtil.createUserWithoutId(userName, firstName, lastName, password);
+        User userExpected = UserUtil.createUserWithoutId("second", "second", "second", "123");
 
-        User expectedUser = userRepository.getUser(idAdmin);
+        int id = userRepository.createUser(userCreated);
+        userExpected.setId(id);
 
-        assertThat(expectedUser, equalTo(userForUpdate));
+        userRepository.updateUser(id, userExpected);
+
+        commitAndReopenSession();
+
+        User actualUser = userRepository.getUser(id);
+        assertThat(actualUser, equalTo(userExpected));
     }
 
     @Test
@@ -93,6 +100,7 @@ public class UserRepositoryHqlTest extends AbstractHibernateTest {
         User user = UserUtil.createUserWithoutId(userNameExisted, firstName, lastName, password);
 
         userRepository.createUser(user);
+        userRepository.createUser(user);
     }
 
     @Test
@@ -110,7 +118,7 @@ public class UserRepositoryHqlTest extends AbstractHibernateTest {
     }
 
     @Test
-    public void getUser_WhenNotExist() throws DuplicateUserException {
+    public void getUser_WhenNotExist() {
         int NotExistUserId = -1;
 
         User userFromDb = userRepository.getUser(NotExistUserId);
@@ -133,10 +141,24 @@ public class UserRepositoryHqlTest extends AbstractHibernateTest {
     }
 
     @Test
-    public void getUserList() {
-        int expectedCount = 3;
+    public void getUserList() throws DuplicateUserException {
+        User user1 = UserUtil.createUserWithoutId("first", "first", "first", "123");
+        User user2 = UserUtil.createUserWithoutId("second", "second", "second", "123");
+
+        int id1 = userRepository.createUser(user1);
+        int id2 = userRepository.createUser(user2);
+
+        user1.setId(id1);
+        user2.setId(id2);
+
+        ArrayList<User> users = new ArrayList<>();
+        users.add(user2);
+        users.add(user1);
+
+        int expectedCount = 2;
         List<User> userList = userRepository.getUserList();
 
         assertThat(userList.size(), equalTo(expectedCount));
+        assertThat(userList, containsInAnyOrder(users.toArray()));
     }
 }

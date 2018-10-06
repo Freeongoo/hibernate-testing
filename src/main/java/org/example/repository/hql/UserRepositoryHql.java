@@ -37,6 +37,7 @@ public class UserRepositoryHql implements UserRepository {
 
         int result = query.executeUpdate();
         if (result == 0) throw new NotExistUserException("Try update not exist User by id: \"" + id + "\"");
+        session.flush();
     }
 
     @Override
@@ -46,8 +47,7 @@ public class UserRepositoryHql implements UserRepository {
             throw new DuplicateUserException("Duplicate User with userName: \"" + user.getUserName() + "\"");
 
         Session session = SessionHolder.get();
-        int userId = (int) session.save(user);
-        return userId;
+        return (int) session.save(user);
     }
 
     @Override
@@ -71,5 +71,13 @@ public class UserRepositoryHql implements UserRepository {
         Session session = SessionHolder.get();
         Query query = session.createQuery("from User");
         return query.list();
+    }
+
+    @Override
+    public void deleteAll() {
+        Session session = SessionHolder.get();
+        Query query = session.createQuery("delete from User");
+
+        query.executeUpdate();
     }
 }

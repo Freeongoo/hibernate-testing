@@ -4,18 +4,13 @@
 <hibernate-configuration>
     <session-factory>
 
-        <property name = "hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
-        <property name = "hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-        <property name = "hibernate.connection.url">jdbc:mysql://localhost/hib</property>
-        <property name = "hibernate.connection.username">root</property>
-        <property name = "hibernate.connection.password">root</property>
-
-        <!-- JDBC connection pool (use the built-in) -->
-        <property name="connection.pool_size">5</property>
-
-        <!-- Echo all executed SQL to stdout -->
+        <property name="hibernate.connection.driver_class">org.h2.Driver</property>
+        <property name="hibernate.connection.username">sa</property>
+        <property name="hibernate.connection.password">password</property>
+        <property name="hibernate.connection.url">jdbc:h2:mem:test</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.H2Dialect</property>
         <property name="show_sql">true</property>
-
+        <property name="connection.pool_size">1</property>
         <property name="hibernate.id.new_generator_mappings">false</property>
         <property name="hibernate.hbm2ddl.auto">create</property><!-- creates schema from entities each app deploy  -->
 

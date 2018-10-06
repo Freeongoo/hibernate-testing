@@ -2,7 +2,8 @@ package org.example;
 
 import org.example.persistance.HibernateUtil;
 import org.example.persistance.SessionHolder;
-import org.hibernate.FlushMode;
+import org.example.repository.UserRepository;
+import org.example.repository.hql.UserRepositoryHql;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.*;
@@ -20,15 +21,28 @@ public abstract class AbstractHibernateTest {
     public void setUp() {
         session = sessionFactory.openSession();
         session.beginTransaction();
-        session.setHibernateFlushMode(FlushMode.ALWAYS);
         SessionHolder.set(session);
     }
 
     @After
     public void tearDown() {
+        UserRepository userRepository = new UserRepositoryHql();
+        userRepository.deleteAll();
+
         SessionHolder.set(null);
-        session.getTransaction().rollback();
+        session.getTransaction().commit();
         session.close();
+    }
+
+    public void commitAndReopenSession() {
+        session.flush();
+        session.getTransaction().commit();
+        session.close();
+        SessionHolder.set(null);
+
+        session = sessionFactory.openSession();
+        session.beginTransaction();
+        SessionHolder.set(session);
     }
 
     @AfterClass

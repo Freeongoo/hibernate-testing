@@ -19,4 +19,6 @@ public interface UserRepository {
     User getUserByUserName(String userName);
 
     List<User> getUserList();
+
+    void deleteAll();
 }
