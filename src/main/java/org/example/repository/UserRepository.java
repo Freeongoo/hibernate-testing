@@ -8,9 +8,9 @@ import java.util.List;
 
 public interface UserRepository {
 
-    void deleteUser(int id) throws NotExistUserException;
+    void deleteUser(User user) throws NotExistUserException;
 
-    void updateUser(int id, User user) throws DuplicateUserException, NotExistUserException;
+    void updateUser(User user) throws DuplicateUserException, NotExistUserException;
 
     int createUser(User user) throws DuplicateUserException;
 
@@ -18,7 +18,7 @@ public interface UserRepository {
 
     User getUserByUserName(String userName);
 
-    List<User> getUserList();
+    List getUserList();
 
     void deleteAll();
 }

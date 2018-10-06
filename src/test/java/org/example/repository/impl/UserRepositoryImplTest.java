@@ -1,11 +1,10 @@
-package org.example.HQL.impl;
+package org.example.repository.impl;
 
 import org.example.AbstractHibernateTest;
 import org.example.entity.User;
 import org.example.exception.DuplicateUserException;
 import org.example.exception.NotExistUserException;
 import org.example.repository.UserRepository;
-import org.example.repository.hql.UserRepositoryHql;
 import org.example.util.UserUtil;
 import org.junit.Test;
 
@@ -16,13 +15,13 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertThat;
 
-public class UserRepositoryHqlTest extends AbstractHibernateTest {
+public class UserRepositoryImplTest extends AbstractHibernateTest {
     private UserRepository userRepository;
 
     @Override
     public void setUp() {
         super.setUp();
-        userRepository = new UserRepositoryHql();
+        userRepository = new UserRepositoryImpl();
     }
 
     @Override
@@ -41,7 +40,10 @@ public class UserRepositoryHqlTest extends AbstractHibernateTest {
         int id = userRepository.createUser(forDeleteUser);
         forDeleteUser.setId(id);
 
-        userRepository.deleteUser(id);
+        userRepository.deleteUser(forDeleteUser);
+
+        commitAndReopenSession();
+
         User userFromDb = userRepository.getUser(id);
 
         assertThat(userFromDb, equalTo(null));
@@ -49,12 +51,17 @@ public class UserRepositoryHqlTest extends AbstractHibernateTest {
 
     @Test(expected = NotExistUserException.class)
     public void deleteUser_WhenNotExistUserId() throws NotExistUserException {
-        int notExistUserId = -1;
-        userRepository.deleteUser(notExistUserId);
+        String userName = "newUser";
+        String firstName = "first";
+        String lastName = "last";
+        String password = "query";
+
+        User userCreated = UserUtil.createUserWithoutId(userName, firstName, lastName, password);
+        userCreated.setId(1);
+        userRepository.deleteUser(userCreated);
     }
 
     @Test
-    // TODO: Cannot testing when create new user and try update it. Working when update existing user in DB
     public void updateUser() throws DuplicateUserException, NotExistUserException {
         String userName = "newUser";
         String firstName = "first";
@@ -67,9 +74,9 @@ public class UserRepositoryHqlTest extends AbstractHibernateTest {
         int id = userRepository.createUser(userCreated);
         userExpected.setId(id);
 
-        userRepository.updateUser(id, userExpected);
-
         commitAndReopenSession();
+
+        userRepository.updateUser(userExpected);
 
         User actualUser = userRepository.getUser(id);
         assertThat(actualUser, equalTo(userExpected));

@@ -3,7 +3,7 @@ package org.example;
 import org.example.persistance.HibernateUtil;
 import org.example.persistance.SessionHolder;
 import org.example.repository.UserRepository;
-import org.example.repository.hql.UserRepositoryHql;
+import org.example.repository.impl.UserRepositoryImpl;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.*;
@@ -26,7 +26,7 @@ public abstract class AbstractHibernateTest {
 
     @After
     public void tearDown() {
-        UserRepository userRepository = new UserRepositoryHql();
+        UserRepository userRepository = new UserRepositoryImpl();
         userRepository.deleteAll();
 
         SessionHolder.set(null);
