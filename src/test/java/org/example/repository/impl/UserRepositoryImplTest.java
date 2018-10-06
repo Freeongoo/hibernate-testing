@@ -1,5 +1,7 @@
 package org.example.repository.impl;
 
+import com.github.javafaker.Faker;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.example.AbstractHibernateTest;
 import org.example.entity.User;
 import org.example.exception.DuplicateUserException;
@@ -31,7 +33,7 @@ public class UserRepositoryImplTest extends AbstractHibernateTest {
 
     @Test
     public void deleteUser() throws NotExistUserException, DuplicateUserException {
-        User forDeleteUser = getUserByDefault();
+        User forDeleteUser = getUserByStaticValues();
         int id = userRepository.createUser(forDeleteUser);
         forDeleteUser.setId(id);
 
@@ -45,7 +47,7 @@ public class UserRepositoryImplTest extends AbstractHibernateTest {
 
     @Test(expected = NotExistUserException.class)
     public void deleteUser_WhenNotExistUserId() throws NotExistUserException {
-        User userCreated = getUserByDefault();
+        User userCreated = getUserByStaticValues();
         userCreated.setId(1);
 
         flushAndClearSession();
@@ -55,7 +57,7 @@ public class UserRepositoryImplTest extends AbstractHibernateTest {
 
     @Test
     public void updateUser() throws DuplicateUserException, NotExistUserException {
-        User userCreated = getUserByDefault();
+        User userCreated = getUserByStaticValues();
         int idUserForUpdate = userRepository.createUser(userCreated);
 
         flushAndClearSession();
@@ -144,7 +146,7 @@ public class UserRepositoryImplTest extends AbstractHibernateTest {
 
     @Test
     public void getUser() throws DuplicateUserException {
-        User user = getUserByDefault();
+        User user = getUserByStaticValues();
         int id = userRepository.createUser(user);
 
         User userFromDb = userRepository.getUser(id);
@@ -172,6 +174,19 @@ public class UserRepositoryImplTest extends AbstractHibernateTest {
         User userFromDb = userRepository.getUserByUserName(userName);
 
         assertThat(userFromDb, equalTo(expectedUser));
+    }
+
+    @Test
+    public void getUserByUserName_WhenRandom() throws DuplicateUserException {
+        String myUserName = "MyUserName";
+
+        User user = getUserByRandom();
+        user.setUserName(myUserName);
+        userRepository.createUser(user);
+
+        User userFromDb = userRepository.getUserByUserName(myUserName);
+
+        assertThat(userFromDb, equalTo(user));
     }
 
     @Test
@@ -213,11 +228,22 @@ public class UserRepositoryImplTest extends AbstractHibernateTest {
         assertThat(actualList, containsInAnyOrder(expectedList.toArray()));
     }
 
-    private User getUserByDefault() {
+    private User getUserByStaticValues() {
         String userName = "newUser";
         String firstName = "first";
         String lastName = "last";
         String password = "query";
+
+        return UserUtil.createUserWithoutId(userName, firstName, lastName, password);
+    }
+
+    private User getUserByRandom() {
+        Faker faker = new Faker();
+
+        String userName = faker.name().username();
+        String firstName = faker.name().firstName();
+        String lastName = faker.name().lastName();
+        String password = RandomStringUtils.random(10, true, true);
 
         return UserUtil.createUserWithoutId(userName, firstName, lastName, password);
     }
