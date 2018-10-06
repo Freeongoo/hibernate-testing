@@ -8,6 +8,7 @@ import org.example.persistance.SessionHolder;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
+import javax.persistence.TypedQuery;
 import java.util.List;
 
 public class UserRepositoryImpl implements UserRepository {
@@ -62,7 +63,7 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public List<User> getUserList() {
         Session session = SessionHolder.get();
-        Query query = session.createQuery("from User");
+        Query<User> query = session.createQuery("from User", User.class);
         return query.list();
     }
 
