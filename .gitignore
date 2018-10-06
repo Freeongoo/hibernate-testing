@@ -2,6 +2,7 @@
 .gradle
 /build/
 /yarn-error.log
+/target
 
 # Ignore Gradle GUI config
 gradle-app.setting
