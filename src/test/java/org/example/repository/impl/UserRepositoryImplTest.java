@@ -66,6 +66,8 @@ public class UserRepositoryImplTest extends AbstractHibernateTest {
         userExpected.setId(idUserForUpdate);
         userRepository.updateUser(userExpected);
 
+        flushAndClearSession();
+
         User actualUser = userRepository.getUser(idUserForUpdate);
         assertThat(actualUser, equalTo(userExpected));
     }
@@ -85,6 +87,8 @@ public class UserRepositoryImplTest extends AbstractHibernateTest {
         User userExpected = UserUtil.createUserWithoutId(userName, "second", lastName, password);
         userExpected.setId(idUserForUpdate);
         userRepository.updateUser(userExpected);
+
+        flushAndClearSession();
 
         User actualUser = userRepository.getUser(idUserForUpdate);
         assertThat(actualUser, equalTo(userExpected));
@@ -110,6 +114,8 @@ public class UserRepositoryImplTest extends AbstractHibernateTest {
         User userExpected = UserUtil.createUserWithoutId(existUserName, "second", "second", "123");
         userExpected.setId(idUserForUpdate);
         userRepository.updateUser(userExpected);
+
+        flushAndClearSession();
 
         User actualUser = userRepository.getUser(idUserForUpdate);
         assertThat(actualUser, equalTo(userExpected));
@@ -141,6 +147,8 @@ public class UserRepositoryImplTest extends AbstractHibernateTest {
         User user = UserUtil.createUserWithoutId(userNameExisted, firstName, lastName, password);
 
         userRepository.createUser(user);
+        flushAndClearSession();
+
         userRepository.createUser(user);
     }
 
@@ -148,6 +156,8 @@ public class UserRepositoryImplTest extends AbstractHibernateTest {
     public void getUser() throws DuplicateUserException {
         User user = getUserByStaticValues();
         int id = userRepository.createUser(user);
+
+        flushAndClearSession();
 
         User userFromDb = userRepository.getUser(id);
         assertThat(userFromDb, equalTo(user));
@@ -171,8 +181,9 @@ public class UserRepositoryImplTest extends AbstractHibernateTest {
         User expectedUser = UserUtil.createUserWithoutId(userName, firstName, lastName, password);
         userRepository.createUser(expectedUser);
 
-        User userFromDb = userRepository.getUserByUserName(userName);
+        flushAndClearSession();
 
+        User userFromDb = userRepository.getUserByUserName(userName);
         assertThat(userFromDb, equalTo(expectedUser));
     }
 
@@ -184,8 +195,9 @@ public class UserRepositoryImplTest extends AbstractHibernateTest {
         user.setUserName(myUserName);
         userRepository.createUser(user);
 
-        User userFromDb = userRepository.getUserByUserName(myUserName);
+        flushAndClearSession();
 
+        User userFromDb = userRepository.getUserByUserName(myUserName);
         assertThat(userFromDb, equalTo(user));
     }
 
@@ -196,6 +208,8 @@ public class UserRepositoryImplTest extends AbstractHibernateTest {
 
         int id1 = userRepository.createUser(user1);
         int id2 = userRepository.createUser(user2);
+
+        flushAndClearSession();
 
         user1.setId(id1);
         user2.setId(id2);
@@ -219,6 +233,8 @@ public class UserRepositoryImplTest extends AbstractHibernateTest {
         userRepository.createUser(user2);
 
         userRepository.deleteAll();
+
+        flushAndClearSession();
 
         List<User> expectedList = new ArrayList<>();
 
