@@ -6,7 +6,10 @@ import org.example.repository.UserRepository;
 import org.example.repository.impl.UserRepositoryImpl;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.junit.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
 
 public abstract class AbstractHibernateTest {
     protected static SessionFactory sessionFactory;
@@ -19,30 +22,13 @@ public abstract class AbstractHibernateTest {
 
     @Before
     public void setUp() {
-        session = sessionFactory.openSession();
-        session.beginTransaction();
-        SessionHolder.set(session);
-
-        UserRepository userRepository = new UserRepositoryImpl();
-        userRepository.deleteAll();
+        beginSessionTransactionAndSaveToHolder();
+        clearDB();
     }
 
     @After
     public void tearDown() {
-        SessionHolder.set(null);
-        session.getTransaction().commit();
-        session.close();
-    }
-
-    public void commitAndReopenSession() {
-        session.flush();
-        session.getTransaction().commit();
-        session.close();
-        SessionHolder.set(null);
-
-        session = sessionFactory.openSession();
-        session.beginTransaction();
-        SessionHolder.set(session);
+        sessionCommitAndClose();
     }
 
     @AfterClass
@@ -50,5 +36,28 @@ public abstract class AbstractHibernateTest {
         if (sessionFactory != null) {
             sessionFactory.close();
         }
+    }
+
+    // TODO: don't forget to add a call to delete methods when adding a new Entity
+    private void clearDB() {
+        UserRepository userRepository = new UserRepositoryImpl();
+        userRepository.deleteAll();
+    }
+
+    private void beginSessionTransactionAndSaveToHolder() {
+        session = sessionFactory.openSession();
+        session.beginTransaction();
+        SessionHolder.set(session);
+    }
+
+    protected void commitAndReopenSession() {
+        sessionCommitAndClose();
+        beginSessionTransactionAndSaveToHolder();
+    }
+
+    private void sessionCommitAndClose() {
+        session.getTransaction().commit();
+        session.close();
+        SessionHolder.set(null);
     }
 }

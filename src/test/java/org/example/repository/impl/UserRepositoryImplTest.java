@@ -31,12 +31,7 @@ public class UserRepositoryImplTest extends AbstractHibernateTest {
 
     @Test
     public void deleteUser() throws NotExistUserException, DuplicateUserException {
-        String userName = "newUser";
-        String firstName = "first";
-        String lastName = "last";
-        String password = "query";
-
-        User forDeleteUser = UserUtil.createUserWithoutId(userName, firstName, lastName, password);
+        User forDeleteUser = getUserByDefault();
         int id = userRepository.createUser(forDeleteUser);
         forDeleteUser.setId(id);
 
@@ -51,24 +46,15 @@ public class UserRepositoryImplTest extends AbstractHibernateTest {
 
     @Test(expected = NotExistUserException.class)
     public void deleteUser_WhenNotExistUserId() throws NotExistUserException {
-        String userName = "newUser";
-        String firstName = "first";
-        String lastName = "last";
-        String password = "query";
-
-        User userCreated = UserUtil.createUserWithoutId(userName, firstName, lastName, password);
+        User userCreated = getUserByDefault();
         userCreated.setId(1);
+
         userRepository.deleteUser(userCreated);
     }
 
     @Test
     public void updateUser() throws DuplicateUserException, NotExistUserException {
-        String userName = "newUser";
-        String firstName = "first";
-        String lastName = "last";
-        String password = "query";
-
-        User userCreated = UserUtil.createUserWithoutId(userName, firstName, lastName, password);
+        User userCreated = getUserByDefault();
         int idUserForUpdate = userRepository.createUser(userCreated);
 
         commitAndReopenSession();
@@ -156,12 +142,7 @@ public class UserRepositoryImplTest extends AbstractHibernateTest {
 
     @Test
     public void getUser() throws DuplicateUserException {
-        String userName = "newUser";
-        String firstName = "first";
-        String lastName = "last";
-        String password = "query";
-
-        User user = UserUtil.createUserWithoutId(userName, firstName, lastName, password);
+        User user = getUserByDefault();
         int id = userRepository.createUser(user);
 
         User userFromDb = userRepository.getUser(id);
@@ -211,5 +192,14 @@ public class UserRepositoryImplTest extends AbstractHibernateTest {
 
         assertThat(userList.size(), equalTo(expectedCount));
         assertThat(userList, containsInAnyOrder(users.toArray()));
+    }
+
+    private User getUserByDefault() {
+        String userName = "newUser";
+        String firstName = "first";
+        String lastName = "last";
+        String password = "query";
+
+        return UserUtil.createUserWithoutId(userName, firstName, lastName, password);
     }
 }
