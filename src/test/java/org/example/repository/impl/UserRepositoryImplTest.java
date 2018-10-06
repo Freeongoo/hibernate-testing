@@ -35,7 +35,8 @@ public class UserRepositoryImplTest extends AbstractHibernateTest {
     public void deleteUser() throws NotExistUserException, DuplicateUserException {
         User forDeleteUser = getUserByStaticValues();
         int id = userRepository.createUser(forDeleteUser);
-        forDeleteUser.setId(id);
+
+        flushAndClearSession();
 
         userRepository.deleteUser(forDeleteUser);
 
@@ -205,13 +206,10 @@ public class UserRepositoryImplTest extends AbstractHibernateTest {
         User user1 = UserUtil.createUserWithoutId("first", "first", "first", "123");
         User user2 = UserUtil.createUserWithoutId("second", "second", "second", "123");
 
-        int id1 = userRepository.createUser(user1);
-        int id2 = userRepository.createUser(user2);
+        userRepository.createUser(user1);
+        userRepository.createUser(user2);
 
         flushAndClearSession();
-
-        user1.setId(id1);
-        user2.setId(id2);
 
         ArrayList<User> expectedList = new ArrayList<>();
         expectedList.add(user2);
@@ -231,12 +229,13 @@ public class UserRepositoryImplTest extends AbstractHibernateTest {
         userRepository.createUser(user1);
         userRepository.createUser(user2);
 
+        flushAndClearSession();
+
         userRepository.deleteAll();
 
         flushAndClearSession();
 
         List<User> expectedList = new ArrayList<>();
-
         List<User> actualList = userRepository.getUserList();
 
         assertThat(actualList.size(), equalTo(expectedList.size()));
