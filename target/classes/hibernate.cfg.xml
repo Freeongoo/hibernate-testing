@@ -14,7 +14,7 @@
         <property name="connection.pool_size">5</property>
 
         <!-- Echo all executed SQL to stdout -->
-        <property name="show_sql">true</property>
+        <property name="show_sql">false</property>
 
         <property name="hibernate.id.new_generator_mappings">false</property>
         <property name="hibernate.hbm2ddl.auto">create</property><!-- creates schema from entities each app deploy  -->

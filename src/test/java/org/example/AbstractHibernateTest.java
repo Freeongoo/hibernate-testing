@@ -22,13 +22,13 @@ public abstract class AbstractHibernateTest {
         session = sessionFactory.openSession();
         session.beginTransaction();
         SessionHolder.set(session);
+
+        UserRepository userRepository = new UserRepositoryImpl();
+        userRepository.deleteAll();
     }
 
     @After
     public void tearDown() {
-        UserRepository userRepository = new UserRepositoryImpl();
-        userRepository.deleteAll();
-
         SessionHolder.set(null);
         session.getTransaction().commit();
         session.close();

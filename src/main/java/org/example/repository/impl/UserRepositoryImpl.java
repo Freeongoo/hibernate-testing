@@ -29,6 +29,10 @@ public class UserRepositoryImpl implements UserRepository {
             throw new DuplicateUserException("Duplicate User by userName: \"" + user.getUserName() + "\"");
 
         Session session = SessionHolder.get();
+        // important remove from session, if not will throw:
+        // org.hibernate.NonUniqueObjectException: A different object with the same identifier value was already associated with the session
+        if (userFromDb != null) session.detach(userFromDb);
+
         session.update(user);
     }
 

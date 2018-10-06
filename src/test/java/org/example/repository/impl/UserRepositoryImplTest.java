@@ -81,6 +81,26 @@ public class UserRepositoryImplTest extends AbstractHibernateTest {
         assertThat(actualUser, equalTo(userExpected));
     }
 
+    @Test
+    public void updateUser_OnlyOneField() throws DuplicateUserException, NotExistUserException {
+        String userName = "newUser";
+        String firstName = "first";
+        String lastName = "last";
+        String password = "query";
+
+        User userCreated = UserUtil.createUserWithoutId(userName, firstName, lastName, password);
+        int idUserForUpdate = userRepository.createUser(userCreated);
+
+        commitAndReopenSession();
+
+        User userExpected = UserUtil.createUserWithoutId(userName, "second", lastName, password);
+        userExpected.setId(idUserForUpdate);
+        userRepository.updateUser(userExpected);
+
+        User actualUser = userRepository.getUser(idUserForUpdate);
+        assertThat(actualUser, equalTo(userExpected));
+    }
+
     @Test(expected = DuplicateUserException.class)
     public void updateUser_WhenExistUserName() throws DuplicateUserException, NotExistUserException {
         String userName = "newUser";
