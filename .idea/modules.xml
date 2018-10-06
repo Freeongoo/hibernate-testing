@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/hibernate-example.iml" filepath="$PROJECT_DIR$/hibernate-example.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hibernate-testing.iml" filepath="$PROJECT_DIR$/hibernate-testing.iml" />
     </modules>
   </component>
 </project>

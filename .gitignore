@@ -17,6 +17,7 @@ gradle-app.setting
 .idea/**/tasks.xml
 .idea/dictionaries
 .idea/artifacts
+.idea/hotswap_agent.xml
 
 # Sensitive or high-churn files:
 .idea/**/dataSources/
