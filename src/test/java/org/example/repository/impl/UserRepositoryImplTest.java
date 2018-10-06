@@ -47,29 +47,28 @@ public class UserRepositoryImplTest extends AbstractHibernateTest {
 
     @Test(expected = NotExistUserException.class)
     public void deleteUser_WhenNotExistUserId() throws NotExistUserException {
-        User userCreated = getUserByStaticValues();
-        userCreated.setId(1);
+        User user = getUserByStaticValues();
 
         flushAndClearSession();
 
-        userRepository.deleteUser(userCreated);
+        userRepository.deleteUser(user);
     }
 
     @Test
     public void updateUser() throws DuplicateUserException, NotExistUserException {
-        User userCreated = getUserByStaticValues();
-        int idUserForUpdate = userRepository.createUser(userCreated);
+        User user = getUserByStaticValues();
+        int idUserForUpdate = userRepository.createUser(user);
 
         flushAndClearSession();
 
-        User userExpected = UserUtil.createUserWithoutId("second", "second", "second", "123");
-        userExpected.setId(idUserForUpdate);
-        userRepository.updateUser(userExpected);
+        User expectedUser = UserUtil.createUserWithoutId("second", "second", "second", "123");
+        expectedUser.setId(idUserForUpdate);
+        userRepository.updateUser(expectedUser);
 
         flushAndClearSession();
 
         User actualUser = userRepository.getUser(idUserForUpdate);
-        assertThat(actualUser, equalTo(userExpected));
+        assertThat(actualUser, equalTo(expectedUser));
     }
 
     @Test
@@ -79,19 +78,19 @@ public class UserRepositoryImplTest extends AbstractHibernateTest {
         String lastName = "last";
         String password = "query";
 
-        User userCreated = UserUtil.createUserWithoutId(userName, firstName, lastName, password);
-        int idUserForUpdate = userRepository.createUser(userCreated);
+        User user = UserUtil.createUserWithoutId(userName, firstName, lastName, password);
+        int idUserForUpdate = userRepository.createUser(user);
 
         flushAndClearSession();
 
-        User userExpected = UserUtil.createUserWithoutId(userName, "second", lastName, password);
-        userExpected.setId(idUserForUpdate);
-        userRepository.updateUser(userExpected);
+        User expectedUser = UserUtil.createUserWithoutId(userName, "second", lastName, password);
+        expectedUser.setId(idUserForUpdate);
+        userRepository.updateUser(expectedUser);
 
         flushAndClearSession();
 
         User actualUser = userRepository.getUser(idUserForUpdate);
-        assertThat(actualUser, equalTo(userExpected));
+        assertThat(actualUser, equalTo(expectedUser));
     }
 
     @Test(expected = DuplicateUserException.class)
@@ -106,19 +105,19 @@ public class UserRepositoryImplTest extends AbstractHibernateTest {
         User firstUser = UserUtil.createUserWithoutId(existUserName, "1", "1", "123");
         userRepository.createUser(firstUser);
 
-        User userCreated = UserUtil.createUserWithoutId(userName, firstName, lastName, password);
-        int idUserForUpdate = userRepository.createUser(userCreated);
+        User user = UserUtil.createUserWithoutId(userName, firstName, lastName, password);
+        int idUserForUpdate = userRepository.createUser(user);
 
         flushAndClearSession();
 
-        User userExpected = UserUtil.createUserWithoutId(existUserName, "second", "second", "123");
-        userExpected.setId(idUserForUpdate);
-        userRepository.updateUser(userExpected);
+        User expectedUser = UserUtil.createUserWithoutId(existUserName, "second", "second", "123");
+        expectedUser.setId(idUserForUpdate);
+        userRepository.updateUser(expectedUser);
 
         flushAndClearSession();
 
         User actualUser = userRepository.getUser(idUserForUpdate);
-        assertThat(actualUser, equalTo(userExpected));
+        assertThat(actualUser, equalTo(expectedUser));
     }
 
     @Test
@@ -183,21 +182,21 @@ public class UserRepositoryImplTest extends AbstractHibernateTest {
 
         flushAndClearSession();
 
-        User userFromDb = userRepository.getUserByUserName(userName);
-        assertThat(userFromDb, equalTo(expectedUser));
+        User actualUser = userRepository.getUserByUserName(userName);
+        assertThat(actualUser, equalTo(expectedUser));
     }
 
     @Test
     public void getUserByUserName_WhenRandom() throws DuplicateUserException {
-        String myUserName = "MyUserName";
+        String userName = "MyUserName";
 
         User user = getUserByRandom();
-        user.setUserName(myUserName);
+        user.setUserName(userName);
         userRepository.createUser(user);
 
         flushAndClearSession();
 
-        User userFromDb = userRepository.getUserByUserName(myUserName);
+        User userFromDb = userRepository.getUserByUserName(userName);
         assertThat(userFromDb, equalTo(user));
     }
 
