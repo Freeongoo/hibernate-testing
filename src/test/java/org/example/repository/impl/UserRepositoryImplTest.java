@@ -180,15 +180,32 @@ public class UserRepositoryImplTest extends AbstractHibernateTest {
         user1.setId(id1);
         user2.setId(id2);
 
-        ArrayList<User> users = new ArrayList<>();
-        users.add(user2);
-        users.add(user1);
+        ArrayList<User> expectedList = new ArrayList<>();
+        expectedList.add(user2);
+        expectedList.add(user1);
 
-        int expectedCount = 2;
-        List<User> userList = userRepository.getUserList();
+        List<User> actualList = userRepository.getUserList();
 
-        assertThat(userList.size(), equalTo(expectedCount));
-        assertThat(userList, containsInAnyOrder(users.toArray()));
+        assertThat(actualList.size(), equalTo(expectedList.size()));
+        assertThat(actualList, containsInAnyOrder(expectedList.toArray()));
+    }
+
+    @Test
+    public void deleteAll() throws DuplicateUserException {
+        User user1 = UserUtil.createUserWithoutId("first", "first", "first", "123");
+        User user2 = UserUtil.createUserWithoutId("second", "second", "second", "123");
+
+        userRepository.createUser(user1);
+        userRepository.createUser(user2);
+
+        userRepository.deleteAll();
+
+        List<User> expectedList = new ArrayList<>();
+
+        List<User> actualList = userRepository.getUserList();
+
+        assertThat(actualList.size(), equalTo(expectedList.size()));
+        assertThat(actualList, containsInAnyOrder(expectedList.toArray()));
     }
 
     private User getUserByDefault() {

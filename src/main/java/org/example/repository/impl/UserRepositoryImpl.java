@@ -1,14 +1,13 @@
 package org.example.repository.impl;
 
+import org.example.entity.User;
 import org.example.exception.DuplicateUserException;
 import org.example.exception.NotExistUserException;
-import org.example.repository.UserRepository;
-import org.example.entity.User;
 import org.example.persistance.SessionHolder;
+import org.example.repository.UserRepository;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
-import javax.persistence.TypedQuery;
 import java.util.List;
 
 public class UserRepositoryImpl implements UserRepository {
