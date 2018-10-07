@@ -28,13 +28,6 @@ public abstract class AbstractHibernateTest {
         sessionCommitAndClose();
     }
 
-    @AfterClass
-    public static void classTearDown() {
-        if (sessionFactory != null) {
-            sessionFactory.close();
-        }
-    }
-
     private void beginSessionTransactionAndSaveToHolder() {
         session = sessionFactory.openSession();
         session.beginTransaction();

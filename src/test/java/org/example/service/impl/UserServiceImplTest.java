@@ -1,14 +1,16 @@
-package org.example.repository.impl;
+package org.example.service.impl;
 
 import com.github.javafaker.Faker;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.example.AbstractHibernateTest;
 import org.example.entity.User;
-import org.example.repository.UserRepository;
+import org.example.exception.DuplicateUserException;
+import org.example.exception.NotExistUserException;
+import org.example.repository.impl.UserRepositoryImpl;
+import org.example.service.UserService;
 import org.example.util.UserUtil;
 import org.junit.Test;
 
-import javax.persistence.PersistenceException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,13 +18,13 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertThat;
 
-public class UserRepositoryImplTest extends AbstractHibernateTest {
-    private UserRepository userRepository;
+public class UserServiceImplTest extends AbstractHibernateTest {
+    private UserService service;
 
     @Override
     public void setUp() {
         super.setUp();
-        userRepository = new UserRepositoryImpl();
+        service = new UserServiceImpl(new UserRepositoryImpl());
     }
 
     @Override
@@ -31,70 +33,70 @@ public class UserRepositoryImplTest extends AbstractHibernateTest {
     }
 
     @Test
-    public void deleteUser() {
+    public void deleteUser() throws NotExistUserException, DuplicateUserException {
         User forDeleteUser = getUserByStaticValues();
-        int id = userRepository.create(forDeleteUser);
+        int id = service.create(forDeleteUser);
 
         flushAndClearSession();
 
-        userRepository.delete(forDeleteUser);
+        service.delete(forDeleteUser);
 
         flushAndClearSession();
 
-        User userFromDb = userRepository.get(id);
+        User userFromDb = service.get(id);
         assertThat(userFromDb, equalTo(null));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void deleteUser_WhenNotExistUserId() {
+    @Test(expected = NotExistUserException.class)
+    public void deleteUser_WhenNotExistUserId() throws NotExistUserException {
         User user = getUserByStaticValues();
 
         flushAndClearSession();
 
-        userRepository.delete(user);
+        service.delete(user);
     }
 
     @Test
-    public void updateUser() {
+    public void updateUser() throws DuplicateUserException, NotExistUserException {
         User user = getUserByStaticValues();
-        int idUserForUpdate = userRepository.create(user);
+        int idUserForUpdate = service.create(user);
 
         flushAndClearSession();
 
         User expectedUser = UserUtil.createUserWithoutId("second", "second", "second", "123");
         expectedUser.setId(idUserForUpdate);
-        userRepository.update(expectedUser);
+        service.update(expectedUser);
 
         flushAndClearSession();
 
-        User actualUser = userRepository.get(idUserForUpdate);
+        User actualUser = service.get(idUserForUpdate);
         assertThat(actualUser, equalTo(expectedUser));
     }
 
     @Test
-    public void updateUser_OnlyOneField() {
+    public void updateUser_OnlyOneField() throws DuplicateUserException, NotExistUserException {
         String userName = "newUser";
         String firstName = "first";
         String lastName = "last";
         String password = "query";
 
         User user = UserUtil.createUserWithoutId(userName, firstName, lastName, password);
-        int idUserForUpdate = userRepository.create(user);
+        int idUserForUpdate = service.create(user);
 
         flushAndClearSession();
 
         User expectedUser = UserUtil.createUserWithoutId(userName, "second", lastName, password);
         expectedUser.setId(idUserForUpdate);
-        userRepository.update(expectedUser);
+        service.update(expectedUser);
 
         flushAndClearSession();
 
-        User actualUser = userRepository.get(idUserForUpdate);
+        User actualUser = service.get(idUserForUpdate);
         assertThat(actualUser, equalTo(expectedUser));
     }
 
-    @Test(expected = PersistenceException.class)
-    public void updateUser_WhenExistUserName() {
+    @Test(expected = DuplicateUserException.class)
+    public void updateUser_WhenExistUserName() throws DuplicateUserException, NotExistUserException {
         String userName = "newUser";
         String firstName = "first";
         String lastName = "last";
@@ -103,41 +105,41 @@ public class UserRepositoryImplTest extends AbstractHibernateTest {
         String existUserName = "exist_user_name";
 
         User firstUser = UserUtil.createUserWithoutId(existUserName, "1", "1", "123");
-        userRepository.create(firstUser);
+        service.create(firstUser);
 
         User user = UserUtil.createUserWithoutId(userName, firstName, lastName, password);
-        int idUserForUpdate = userRepository.create(user);
+        int idUserForUpdate = service.create(user);
 
         flushAndClearSession();
 
         User expectedUser = UserUtil.createUserWithoutId(existUserName, "second", "second", "123");
         expectedUser.setId(idUserForUpdate);
-        userRepository.update(expectedUser);
+        service.update(expectedUser);
 
         flushAndClearSession();
 
-        User actualUser = userRepository.get(idUserForUpdate);
+        User actualUser = service.get(idUserForUpdate);
         assertThat(actualUser, equalTo(expectedUser));
     }
 
     @Test
-    public void createUser() {
+    public void createUser() throws DuplicateUserException {
         String userName = "newUser";
         String firstName = "first";
         String lastName = "last";
         String password = "query";
 
         User expectedUser = UserUtil.createUserWithoutId(userName, firstName, lastName, password);
-        userRepository.create(expectedUser);
+        service.create(expectedUser);
 
         flushAndClearSession();
 
-        User userFromDb = userRepository.getByUserName(userName);
+        User userFromDb = service.getByUserName(userName);
         assertThat(userFromDb, equalTo(expectedUser));
     }
 
-    @Test(expected = PersistenceException.class)
-    public void createUser_WhenExistUserName() {
+    @Test(expected = DuplicateUserException.class)
+    public void createUser_WhenExistUserName() throws DuplicateUserException {
         String userNameExisted = "admin";
         String firstName = "first";
         String lastName = "last";
@@ -145,21 +147,20 @@ public class UserRepositoryImplTest extends AbstractHibernateTest {
 
         User user = UserUtil.createUserWithoutId(userNameExisted, firstName, lastName, password);
 
-        userRepository.create(user);
+        service.create(user);
         flushAndClearSession();
 
-        userRepository.create(user);
-        flushAndClearSession();
+        service.create(user);
     }
 
     @Test
-    public void getUser() {
+    public void getUser() throws DuplicateUserException {
         User user = getUserByStaticValues();
-        int id = userRepository.create(user);
+        int id = service.create(user);
 
         flushAndClearSession();
 
-        User userFromDb = userRepository.get(id);
+        User userFromDb = service.get(id);
         assertThat(userFromDb, equalTo(user));
     }
 
@@ -167,47 +168,47 @@ public class UserRepositoryImplTest extends AbstractHibernateTest {
     public void getUser_WhenNotExist() {
         int NotExistUserId = -1;
 
-        User userFromDb = userRepository.get(NotExistUserId);
+        User userFromDb = service.get(NotExistUserId);
         assertThat(userFromDb, equalTo(null));
     }
 
     @Test
-    public void getUserByUserName() {
+    public void getUserByUserName() throws DuplicateUserException {
         String userName = "otherUser";
         String firstName = "first";
         String lastName = "last";
         String password = "query";
 
         User expectedUser = UserUtil.createUserWithoutId(userName, firstName, lastName, password);
-        userRepository.create(expectedUser);
+        service.create(expectedUser);
 
         flushAndClearSession();
 
-        User actualUser = userRepository.getByUserName(userName);
+        User actualUser = service.getByUserName(userName);
         assertThat(actualUser, equalTo(expectedUser));
     }
 
     @Test
-    public void getUserByUserName_WhenRandom() {
+    public void getUserByUserName_WhenRandom() throws DuplicateUserException {
         String userName = "MyUserName";
 
         User user = getUserByRandom();
         user.setUserName(userName);
-        userRepository.create(user);
+        service.create(user);
 
         flushAndClearSession();
 
-        User userFromDb = userRepository.getByUserName(userName);
+        User userFromDb = service.getByUserName(userName);
         assertThat(userFromDb, equalTo(user));
     }
 
     @Test
-    public void getUserList() {
+    public void getUserList() throws DuplicateUserException {
         User user1 = UserUtil.createUserWithoutId("first", "first", "first", "123");
         User user2 = UserUtil.createUserWithoutId("second", "second", "second", "123");
 
-        userRepository.create(user1);
-        userRepository.create(user2);
+        service.create(user1);
+        service.create(user2);
 
         flushAndClearSession();
 
@@ -215,28 +216,28 @@ public class UserRepositoryImplTest extends AbstractHibernateTest {
         expectedList.add(user2);
         expectedList.add(user1);
 
-        List<User> actualList = userRepository.getAll();
+        List<User> actualList = service.getAll();
 
         assertThat(actualList.size(), equalTo(expectedList.size()));
         assertThat(actualList, containsInAnyOrder(expectedList.toArray()));
     }
 
     @Test
-    public void deleteAll() {
+    public void deleteAll() throws DuplicateUserException {
         User user1 = UserUtil.createUserWithoutId("first", "first", "first", "123");
         User user2 = UserUtil.createUserWithoutId("second", "second", "second", "123");
 
-        userRepository.create(user1);
-        userRepository.create(user2);
+        service.create(user1);
+        service.create(user2);
 
         flushAndClearSession();
 
-        userRepository.deleteAll();
+        service.deleteAll();
 
         flushAndClearSession();
 
         List<User> expectedList = new ArrayList<>();
-        List<User> actualList = userRepository.getAll();
+        List<User> actualList = service.getAll();
 
         assertThat(actualList.size(), equalTo(expectedList.size()));
         assertThat(actualList, containsInAnyOrder(expectedList.toArray()));
