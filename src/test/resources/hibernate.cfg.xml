@@ -9,7 +9,8 @@
         <property name="hibernate.connection.password">password</property>
         <property name="hibernate.connection.url">jdbc:p6spy:h2:mem:test;DB_CLOSE_ON_EXIT=FALSE</property>
         <property name="hibernate.dialect">org.hibernate.dialect.H2Dialect</property>
-        <property name="show_sql">false</property><!-- we use spy - see in log -->
+        <property name="show_sql">false</property><!-- config in log4j -->
+        <property name="format_sql">true</property>
         <property name="connection.pool_size">1</property>
         <property name="hibernate.id.new_generator_mappings">false</property>
         <property name="hibernate.hbm2ddl.auto">create</property><!-- creates schema from entities each app deploy  -->
