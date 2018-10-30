@@ -17,12 +17,12 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertThat;
 
 public class UserRepositoryImplTest extends AbstractHibernateTest {
-    private UserRepository userRepository;
+    private UserRepository repository;
 
     @Override
     public void setUp() {
         super.setUp();
-        userRepository = new UserRepositoryImpl();
+        repository = new UserRepositoryImpl();
     }
 
     @Override
@@ -33,15 +33,15 @@ public class UserRepositoryImplTest extends AbstractHibernateTest {
     @Test
     public void deleteUser() {
         User forDeleteUser = getUserByStaticValues();
-        int id = userRepository.create(forDeleteUser);
+        int id = repository.create(forDeleteUser);
 
         flushAndClearSession();
 
-        userRepository.delete(forDeleteUser);
+        repository.delete(forDeleteUser);
 
         flushAndClearSession();
 
-        User userFromDb = userRepository.get(id);
+        User userFromDb = repository.get(id);
         assertThat(userFromDb, equalTo(null));
     }
 
@@ -51,23 +51,23 @@ public class UserRepositoryImplTest extends AbstractHibernateTest {
 
         flushAndClearSession();
 
-        userRepository.delete(user);
+        repository.delete(user);
     }
 
     @Test
     public void updateUser() {
         User user = getUserByStaticValues();
-        int idUserForUpdate = userRepository.create(user);
+        int idUserForUpdate = repository.create(user);
 
         flushAndClearSession();
 
         User expectedUser = UserUtil.createUserWithoutId("second", "second", "second", "123");
         expectedUser.setId(idUserForUpdate);
-        userRepository.update(expectedUser);
+        repository.update(expectedUser);
 
         flushAndClearSession();
 
-        User actualUser = userRepository.get(idUserForUpdate);
+        User actualUser = repository.get(idUserForUpdate);
         assertThat(actualUser, equalTo(expectedUser));
     }
 
@@ -79,17 +79,17 @@ public class UserRepositoryImplTest extends AbstractHibernateTest {
         String password = "query";
 
         User user = UserUtil.createUserWithoutId(userName, firstName, lastName, password);
-        int idUserForUpdate = userRepository.create(user);
+        int idUserForUpdate = repository.create(user);
 
         flushAndClearSession();
 
         User expectedUser = UserUtil.createUserWithoutId(userName, "second", lastName, password);
         expectedUser.setId(idUserForUpdate);
-        userRepository.update(expectedUser);
+        repository.update(expectedUser);
 
         flushAndClearSession();
 
-        User actualUser = userRepository.get(idUserForUpdate);
+        User actualUser = repository.get(idUserForUpdate);
         assertThat(actualUser, equalTo(expectedUser));
     }
 
@@ -103,20 +103,20 @@ public class UserRepositoryImplTest extends AbstractHibernateTest {
         String existUserName = "exist_user_name";
 
         User firstUser = UserUtil.createUserWithoutId(existUserName, "1", "1", "123");
-        userRepository.create(firstUser);
+        repository.create(firstUser);
 
         User user = UserUtil.createUserWithoutId(userName, firstName, lastName, password);
-        int idUserForUpdate = userRepository.create(user);
+        int idUserForUpdate = repository.create(user);
 
         flushAndClearSession();
 
         User expectedUser = UserUtil.createUserWithoutId(existUserName, "second", "second", "123");
         expectedUser.setId(idUserForUpdate);
-        userRepository.update(expectedUser);
+        repository.update(expectedUser);
 
         flushAndClearSession();
 
-        User actualUser = userRepository.get(idUserForUpdate);
+        User actualUser = repository.get(idUserForUpdate);
         assertThat(actualUser, equalTo(expectedUser));
     }
 
@@ -128,11 +128,11 @@ public class UserRepositoryImplTest extends AbstractHibernateTest {
         String password = "query";
 
         User expectedUser = UserUtil.createUserWithoutId(userName, firstName, lastName, password);
-        userRepository.create(expectedUser);
+        repository.create(expectedUser);
 
         flushAndClearSession();
 
-        User userFromDb = userRepository.getByUserName(userName);
+        User userFromDb = repository.getByUserName(userName);
         assertThat(userFromDb, equalTo(expectedUser));
     }
 
@@ -145,21 +145,21 @@ public class UserRepositoryImplTest extends AbstractHibernateTest {
 
         User user = UserUtil.createUserWithoutId(userNameExisted, firstName, lastName, password);
 
-        userRepository.create(user);
+        repository.create(user);
         flushAndClearSession();
 
-        userRepository.create(user);
+        repository.create(user);
         flushAndClearSession();
     }
 
     @Test
     public void getUser() {
         User user = getUserByStaticValues();
-        int id = userRepository.create(user);
+        int id = repository.create(user);
 
         flushAndClearSession();
 
-        User userFromDb = userRepository.get(id);
+        User userFromDb = repository.get(id);
         assertThat(userFromDb, equalTo(user));
     }
 
@@ -167,7 +167,7 @@ public class UserRepositoryImplTest extends AbstractHibernateTest {
     public void getUser_WhenNotExist() {
         int NotExistUserId = -1;
 
-        User userFromDb = userRepository.get(NotExistUserId);
+        User userFromDb = repository.get(NotExistUserId);
         assertThat(userFromDb, equalTo(null));
     }
 
@@ -179,11 +179,11 @@ public class UserRepositoryImplTest extends AbstractHibernateTest {
         String password = "query";
 
         User expectedUser = UserUtil.createUserWithoutId(userName, firstName, lastName, password);
-        userRepository.create(expectedUser);
+        repository.create(expectedUser);
 
         flushAndClearSession();
 
-        User actualUser = userRepository.getByUserName(userName);
+        User actualUser = repository.getByUserName(userName);
         assertThat(actualUser, equalTo(expectedUser));
     }
 
@@ -193,11 +193,11 @@ public class UserRepositoryImplTest extends AbstractHibernateTest {
 
         User user = getUserByRandom();
         user.setUserName(userName);
-        userRepository.create(user);
+        repository.create(user);
 
         flushAndClearSession();
 
-        User userFromDb = userRepository.getByUserName(userName);
+        User userFromDb = repository.getByUserName(userName);
         assertThat(userFromDb, equalTo(user));
     }
 
@@ -206,8 +206,8 @@ public class UserRepositoryImplTest extends AbstractHibernateTest {
         User user1 = UserUtil.createUserWithoutId("first", "first", "first", "123");
         User user2 = UserUtil.createUserWithoutId("second", "second", "second", "123");
 
-        userRepository.create(user1);
-        userRepository.create(user2);
+        repository.create(user1);
+        repository.create(user2);
 
         flushAndClearSession();
 
@@ -215,7 +215,7 @@ public class UserRepositoryImplTest extends AbstractHibernateTest {
         expectedList.add(user2);
         expectedList.add(user1);
 
-        List<User> actualList = userRepository.getAll();
+        List<User> actualList = repository.getAll();
 
         assertThat(actualList.size(), equalTo(expectedList.size()));
         assertThat(actualList, containsInAnyOrder(expectedList.toArray()));
@@ -226,17 +226,17 @@ public class UserRepositoryImplTest extends AbstractHibernateTest {
         User user1 = UserUtil.createUserWithoutId("first", "first", "first", "123");
         User user2 = UserUtil.createUserWithoutId("second", "second", "second", "123");
 
-        userRepository.create(user1);
-        userRepository.create(user2);
+        repository.create(user1);
+        repository.create(user2);
 
         flushAndClearSession();
 
-        userRepository.deleteAll();
+        repository.deleteAll();
 
         flushAndClearSession();
 
         List<User> expectedList = new ArrayList<>();
-        List<User> actualList = userRepository.getAll();
+        List<User> actualList = repository.getAll();
 
         assertThat(actualList.size(), equalTo(expectedList.size()));
         assertThat(actualList, containsInAnyOrder(expectedList.toArray()));
