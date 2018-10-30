@@ -48,4 +48,17 @@ The log file `test.log` contains the sql requests generated using standard tools
 This strategy is used if we want to share Java code between entity classes.  
 Use `@MappedSuperclass` in base class  
 
-see dir: `/src/main/java/org/example/entity/inheritance/no_inheritance`
+see dir: `/src/test/java/org/example/inheritance/no_inheritance`
+
+#### Single table
+
+The Single Table strategy creates one table for each class hierarchy. This is also the default strategy chosen by JPA if we don’t specify one explicitly.
+
+see dir: `/src/test/java/org/example/inheritance/single_table`
+
+#### Table Per Class
+
+The Table Per Class strategy maps each entity to its table which contains all the properties of the entity, including the ones inherited.  
+Like "No inheritance"
+
+see dir: `/src/test/java/org/example/inheritance/table_per_class`

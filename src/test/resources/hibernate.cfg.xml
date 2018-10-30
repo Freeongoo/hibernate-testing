@@ -11,15 +11,26 @@
         <property name="hibernate.dialect">org.hibernate.dialect.H2Dialect</property>
         <property name="show_sql">false</property><!-- config in log4j -->
         <property name="format_sql">true</property>
-        <property name="connection.pool_size">1</property>
+        <property name="connection.pool_size">10</property>
         <property name="hibernate.id.new_generator_mappings">false</property>
         <property name="hibernate.hbm2ddl.auto">create</property><!-- creates schema from entities each app deploy  -->
 
         <!-- List of XML mapping files -->
         <mapping resource="org/example/entity/User.hbm.xml"/>
 
+        <!-- no inheritance -->
         <mapping class="org.example.entity.inheritance.no_inheritance.UserNoInheritance" />
         <mapping class="org.example.entity.inheritance.no_inheritance.ProductNoInheritance" />
+
+        <!-- inheritance single table -->
+        <mapping class="org.example.entity.inheritance.single_table.BaseSingleTable" />
+        <mapping class="org.example.entity.inheritance.single_table.ProductSingleTable" />
+        <mapping class="org.example.entity.inheritance.single_table.UserSingleTable" />
+
+        <!-- inheritance table per class -->
+        <mapping class="org.example.entity.inheritance.table_per_class.BaseTablePerClass" />
+        <mapping class="org.example.entity.inheritance.table_per_class.ProductTablePerClass" />
+        <mapping class="org.example.entity.inheritance.table_per_class.UserTablePerClass" />
 
     </session-factory>
 </hibernate-configuration>

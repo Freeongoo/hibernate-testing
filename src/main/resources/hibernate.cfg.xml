@@ -22,8 +22,19 @@
         <!-- List of XML mapping files -->
         <mapping resource="org/example/entity/User.hbm.xml"/>
 
+        <!-- no inheritance -->
         <mapping class="org.example.entity.inheritance.no_inheritance.UserNoInheritance" />
         <mapping class="org.example.entity.inheritance.no_inheritance.ProductNoInheritance" />
+
+        <!-- inheritance single table -->
+        <mapping class="org.example.entity.inheritance.single_table.BaseSingleTable" />
+        <mapping class="org.example.entity.inheritance.single_table.ProductSingleTable" />
+        <mapping class="org.example.entity.inheritance.single_table.UserSingleTable" />
+
+        <!-- inheritance table per class -->
+        <mapping class="org.example.entity.inheritance.table_per_class.BaseTablePerClass" />
+        <mapping class="org.example.entity.inheritance.table_per_class.ProductTablePerClass" />
+        <mapping class="org.example.entity.inheritance.table_per_class.UserTablePerClass" />
 
     </session-factory>
 </hibernate-configuration>

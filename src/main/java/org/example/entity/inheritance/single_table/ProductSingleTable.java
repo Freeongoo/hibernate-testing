@@ -1,14 +1,13 @@
-package org.example.entity.inheritance.no_inheritance;
+package org.example.entity.inheritance.single_table;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import java.math.BigDecimal;
 import java.util.Objects;
 
 @Entity
-@Table(name = "product_no_inheritance")
-public class ProductNoInheritance extends BaseEntity {
+@Table(name = "product_single_table")
+public class ProductSingleTable extends BaseSingleTable {
     private String name;
 
     @Column
@@ -20,12 +19,12 @@ public class ProductNoInheritance extends BaseEntity {
         this.name = name;
     }
 
-    public ProductNoInheritance(long version, String name) {
-        super(version);
-        this.name = name;
+    public ProductSingleTable() {
     }
 
-    public ProductNoInheritance() {
+    public ProductSingleTable(long version, String name) {
+        super(version);
+        this.name = name;
     }
 
     @Override
@@ -33,7 +32,7 @@ public class ProductNoInheritance extends BaseEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-        ProductNoInheritance that = (ProductNoInheritance) o;
+        ProductSingleTable that = (ProductSingleTable) o;
         return Objects.equals(name, that.name);
     }
 
