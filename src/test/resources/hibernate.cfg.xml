@@ -18,5 +18,8 @@
         <!-- List of XML mapping files -->
         <mapping resource="org/example/entity/User.hbm.xml"/>
 
+        <mapping class="org.example.entity.inheritance.no_inheritance.UserNoInheritance" />
+        <mapping class="org.example.entity.inheritance.no_inheritance.ProductNoInheritance" />
+
     </session-factory>
 </hibernate-configuration>

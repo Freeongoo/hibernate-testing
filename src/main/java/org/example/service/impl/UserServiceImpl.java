@@ -1,6 +1,6 @@
 package org.example.service.impl;
 
-import org.example.entity.User;
+import org.example.entity.old_style_xml.User;
 import org.example.exception.DuplicateUserException;
 import org.example.exception.NotExistUserException;
 import org.example.repository.UserRepository;

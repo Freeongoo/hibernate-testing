@@ -12,7 +12,7 @@
 
 <hibernate-mapping package="org.example.entity">
 
-    <class name="org.example.entity.User" table="users">
+    <class name="org.example.entity.old_style_xml.User" table="users">
         <id name="id" column="id">
             <generator class="increment"/>
         </id>

@@ -40,3 +40,7 @@ Without `flushAndClearSession()` will throw: `org.hibernate.NonUniqueObjectExcep
 When you run tests in the console, the display sql using lib "p6spy" - with params in sql:)
 
 The log file `test.log` contains the sql requests generated using standard tools of hibernate.
+
+#### Testing inheritance in Hibernate
+
+see dir: `/src/test/java/org/example/repository/inheritance`

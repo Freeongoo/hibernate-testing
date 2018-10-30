@@ -1,7 +1,7 @@
 package org.example.util;
 
 import org.apache.commons.codec.digest.DigestUtils;
-import org.example.entity.User;
+import org.example.entity.old_style_xml.User;
 
 public class UserUtil {
     public static User createUserWithoutId(String userName, String firstName, String lastName, String password) {

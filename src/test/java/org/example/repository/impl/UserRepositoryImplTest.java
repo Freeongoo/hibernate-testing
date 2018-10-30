@@ -3,7 +3,7 @@ package org.example.repository.impl;
 import com.github.javafaker.Faker;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.example.AbstractHibernateTest;
-import org.example.entity.User;
+import org.example.entity.old_style_xml.User;
 import org.example.repository.UserRepository;
 import org.example.util.UserUtil;
 import org.junit.Test;

@@ -1,4 +1,4 @@
-package org.example.entity;
+package org.example.entity.old_style_xml;
 
 import java.util.Objects;
 
