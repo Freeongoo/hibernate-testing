@@ -35,12 +35,17 @@ assertThat(actualUser, equalTo(userExpected));
 
 Without `flushAndClearSession()` will throw: `org.hibernate.NonUniqueObjectException: A different object with the same identifier value was already associated with the session`
 
-### Tests
+# Tests
 
 When you run tests in the console, the display sql using lib "p6spy" - with params in sql:)
 
 The log file `test.log` contains the sql requests generated using standard tools of hibernate.
 
-#### Testing inheritance in Hibernate
+## Testing inheritance in Hibernate
 
-see dir: `/src/test/java/org/example/repository/inheritance`
+#### No inheritance
+
+This strategy is used if we want to share Java code between entity classes.  
+Use `@MappedSuperclass` in base class  
+
+see dir: `/src/main/java/org/example/entity/inheritance/no_inheritance`
