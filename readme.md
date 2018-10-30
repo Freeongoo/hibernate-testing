@@ -62,3 +62,9 @@ The Table Per Class strategy maps each entity to its table which contains all th
 Like "No inheritance"
 
 see dir: `/src/test/java/org/example/inheritance/table_per_class`
+
+#### Joined
+
+Using this strategy, each class in the hierarchy is mapped to its table.
+
+see dir: `/src/test/java/org/example/inheritance/joined`

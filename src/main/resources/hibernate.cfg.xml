@@ -36,5 +36,10 @@
         <mapping class="org.example.entity.inheritance.table_per_class.ProductTablePerClass" />
         <mapping class="org.example.entity.inheritance.table_per_class.UserTablePerClass" />
 
+        <!-- inheritance joined -->
+        <mapping class="org.example.entity.inheritance.joined.BaseJoined" />
+        <mapping class="org.example.entity.inheritance.joined.ProductJoined" />
+        <mapping class="org.example.entity.inheritance.joined.UserJoined" />
+
     </session-factory>
 </hibernate-configuration>

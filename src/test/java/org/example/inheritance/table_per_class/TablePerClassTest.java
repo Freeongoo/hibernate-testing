@@ -1,8 +1,6 @@
 package org.example.inheritance.table_per_class;
 
 import org.example.AbstractHibernateTest;
-import org.example.entity.inheritance.single_table.ProductSingleTable;
-import org.example.entity.inheritance.single_table.UserSingleTable;
 import org.example.entity.inheritance.table_per_class.ProductTablePerClass;
 import org.example.entity.inheritance.table_per_class.UserTablePerClass;
 import org.junit.Test;
