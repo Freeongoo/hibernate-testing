@@ -68,3 +68,9 @@ see dir: `/src/test/java/org/example/inheritance/table_per_class`
 Using this strategy, each class in the hierarchy is mapped to its table.
 
 see dir: `/src/test/java/org/example/inheritance/joined`
+
+## Testing relations in Hibernate
+
+#### OneToMany by joinColumn
+
+see dir: `/src/test/java/org/example/entity/relations/OneToMany/JoinColumn`

@@ -41,5 +41,9 @@
         <mapping class="org.example.entity.inheritance.joined.ProductJoined" />
         <mapping class="org.example.entity.inheritance.joined.UserJoined" />
 
+        <!-- relations joinColumn -->
+        <mapping class="org.example.entity.relations.OneToMany.JoinColumn.ClassRoom" />
+        <mapping class="org.example.entity.relations.OneToMany.JoinColumn.Pupil" />
+
     </session-factory>
 </hibernate-configuration>

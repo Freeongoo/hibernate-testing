@@ -51,8 +51,9 @@ public abstract class AbstractHibernateTest {
         Session session = SessionHolder.get();
         Query query1 = session.createNativeQuery("show columns from " + tableName);
         List<Object[]> results = query1.getResultList();
-        System.out.println("\n===================");
+        System.out.println("\n======================================");
         System.out.println("Structure table \"" + tableName + "\":");
+        System.out.println("--------------------------------------");
         for (Object[] obj : results) {
             System.out.println("field: " + obj[0]);
             System.out.println("\ttype: " + obj[1]);
@@ -60,15 +61,16 @@ public abstract class AbstractHibernateTest {
             System.out.println("\tkey: " + obj[3]);
             System.out.println("\tdefault: " + obj[4]);
         }
-        System.out.println("===================\n");
+        System.out.println("======================================\n");
     }
 
     protected void showContentTable(String tableName) {
         Session session = SessionHolder.get();
         Query query1 = session.createNativeQuery("select * from " + tableName);
         List<Object[]> results = query1.getResultList();
-        System.out.println("\n===================");
+        System.out.println("\n======================================");
         System.out.println("Content table \"" + tableName + "\":");
+        System.out.println("--------------------------------------");
         int cnt = 0;
         for (Object[] obj : results) {
             cnt++;
@@ -77,6 +79,6 @@ public abstract class AbstractHibernateTest {
                 System.out.println("\t" + objItem);
             }
         }
-        System.out.println("===================\n");
+        System.out.println("======================================\n");
     }
 }
