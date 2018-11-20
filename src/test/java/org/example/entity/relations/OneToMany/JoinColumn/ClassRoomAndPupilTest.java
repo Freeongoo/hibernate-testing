@@ -80,11 +80,13 @@ public class ClassRoomAndPupilTest extends AbstractHibernateTest {
     // saved only ClassRoom - because not configure cascade
     // if need when save ClassRoom save Pupil automatically add: Cascade={CascadeType.ALL}
     @Test
-    public void save_WhenClassRoomWithPupil() {
+    public void save_WhenClassRoomWithPupil_WhenSaveOnlyClassRoom() {
         ClassRoom classRoom = new ClassRoom(12, "MyClassRoom");
 
         Pupil pupil1 = new Pupil("John", 20);
+        pupil1.setClassRoom(classRoom);
         Pupil pupil2 = new Pupil("Mike", 21);
+        pupil2.setClassRoom(classRoom);
 
         List<Pupil> pupils = new ArrayList<>();
         pupils.add(pupil1);
@@ -106,6 +108,65 @@ public class ClassRoomAndPupilTest extends AbstractHibernateTest {
 
         printStructureTable("pupil");
         showContentTable("pupil");
+    }
+
+    @Test
+    public void save_WhenClassRoomWithPupil_WhenSaveAllEntity() {
+        ClassRoom classRoom = new ClassRoom(12, "MyClassRoom");
+
+        Pupil pupil1 = new Pupil("John", 20);
+        pupil1.setClassRoom(classRoom);
+        Pupil pupil2 = new Pupil("Mike", 21);
+        pupil2.setClassRoom(classRoom);
+
+        List<Pupil> pupils = new ArrayList<>();
+        pupils.add(pupil1);
+        pupils.add(pupil2);
+
+        classRoom.setPupils(pupils);
+
+        session.persist(classRoom);
+        session.persist(pupil1);
+        session.persist(pupil2);
+        flushAndClearSession();
+
+        List<ClassRoom> listClassRoom = getAllListClassRoom();
+        assertThat(listClassRoom.size(), equalTo(1));
+
+        List<Pupil> listPupil = getAllListPupil();
+        assertThat(listPupil.size(), equalTo(2));
+
+        printStructureTable("class_room");
+        showContentTable("class_room");
+
+        printStructureTable("pupil");
+        showContentTable("pupil");
+    }
+
+    // cannot delete classRoom - not set cascade add:
+    // @OnDelete(action = OnDeleteAction.CASCADE)
+    @Test(expected = javax.persistence.PersistenceException.class)
+    public void save_WhenClassRoomWithPupil_WhenSaveAllEntity_WhenDeleteParent() {
+        ClassRoom classRoom = new ClassRoom(12, "MyClassRoom");
+
+        Pupil pupil1 = new Pupil("John", 20);
+        pupil1.setClassRoom(classRoom);
+        Pupil pupil2 = new Pupil("Mike", 21);
+        pupil2.setClassRoom(classRoom);
+
+        List<Pupil> pupils = new ArrayList<>();
+        pupils.add(pupil1);
+        pupils.add(pupil2);
+
+        classRoom.setPupils(pupils);
+
+        session.persist(classRoom);
+        session.persist(pupil1);
+        session.persist(pupil2);
+        flushAndClearSession();
+
+        session.delete(classRoom);
+        flushAndClearSession();
     }
 
     private List<ClassRoom> getAllListClassRoom() {
