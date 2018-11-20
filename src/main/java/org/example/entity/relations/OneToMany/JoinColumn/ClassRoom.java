@@ -69,13 +69,12 @@ public class ClassRoom {
         ClassRoom classRoom = (ClassRoom) o;
         return Objects.equals(id, classRoom.id) &&
                 Objects.equals(number, classRoom.number) &&
-                Objects.equals(title, classRoom.title) &&
-                Objects.equals(pupils, classRoom.pupils);
+                Objects.equals(title, classRoom.title);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, number, title, pupils);
+        return Objects.hash(id, number, title);
     }
 }

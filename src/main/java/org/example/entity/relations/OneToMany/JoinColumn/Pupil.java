@@ -69,13 +69,12 @@ public class Pupil {
         Pupil pupil = (Pupil) o;
         return Objects.equals(id, pupil.id) &&
                 Objects.equals(name, pupil.name) &&
-                Objects.equals(age, pupil.age) &&
-                Objects.equals(classRoom, pupil.classRoom);
+                Objects.equals(age, pupil.age);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, name, age, classRoom);
+        return Objects.hash(id, name, age);
     }
 }
