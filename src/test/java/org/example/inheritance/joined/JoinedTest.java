@@ -3,8 +3,6 @@ package org.example.inheritance.joined;
 import org.example.AbstractHibernateTest;
 import org.example.entity.inheritance.joined.ProductJoined;
 import org.example.entity.inheritance.joined.UserJoined;
-import org.example.entity.inheritance.single_table.ProductSingleTable;
-import org.example.entity.inheritance.single_table.UserSingleTable;
 import org.junit.Test;
 
 public class JoinedTest extends AbstractHibernateTest {
