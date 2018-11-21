@@ -73,4 +73,5 @@ see dir: `/src/test/java/org/example/inheritance/joined`
 
 #### OneToMany by joinColumn
 
-see dir: `/src/test/java/org/example/entity/relations/OneToMany/JoinColumn`
+* Without cascade:  
+see dir: `/src/test/java/org/example/entity/relations/OneToMany/JoinColumn/NotCascade`

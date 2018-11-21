@@ -1,4 +1,4 @@
-package org.example.entity.relations.OneToMany.JoinColumn;
+package org.example.entity.relations.OneToMany.JoinColumn.NotCascade;
 
 import org.example.AbstractHibernateTest;
 import org.junit.Test;
@@ -167,6 +167,47 @@ public class ClassRoomAndPupilTest extends AbstractHibernateTest {
 
         session.delete(classRoom);
         flushAndClearSession();
+    }
+
+    // cannot delete classRoom - not set cascade
+    @Test
+    public void save_WhenClassRoomWithPupil_WhenSaveAllEntity_WhenDeleteOnePupil() {
+        ClassRoom classRoom = new ClassRoom(12, "MyClassRoom");
+
+        Pupil pupil1 = new Pupil("John", 20);
+        pupil1.setClassRoom(classRoom);
+        Pupil pupil2 = new Pupil("Mike", 21);
+        pupil2.setClassRoom(classRoom);
+
+        List<Pupil> pupils = new ArrayList<>();
+        pupils.add(pupil1);
+        pupils.add(pupil2);
+
+        classRoom.setPupils(pupils);
+
+        session.persist(classRoom);
+        session.persist(pupil1);
+        session.persist(pupil2);
+        flushAndClearSession();
+
+        classRoom.getPupils().remove(0);
+        flushAndClearSession();
+
+        // yes - delete from collection :)
+        List<Pupil> pupilsAfterDelete = classRoom.getPupils();
+        assertThat(pupilsAfterDelete.size(), equalTo(1));
+
+        // check count pupil from DB
+        // not change - because not set cascade. add if want to change count pupil:
+        // @OneToMany(mappedBy = "classRoom", cascade = CascadeType.ALL)
+        List<Pupil> allListPupilFromDb = getAllListPupil();
+        assertThat(allListPupilFromDb.size(), equalTo(2));
+
+        printStructureTable("class_room");
+        showContentTable("class_room");
+
+        printStructureTable("pupil");
+        showContentTable("pupil");
     }
 
     @Test

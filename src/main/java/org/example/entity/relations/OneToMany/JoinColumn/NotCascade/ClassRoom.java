@@ -1,4 +1,4 @@
-package org.example.entity.relations.OneToMany.JoinColumn;
+package org.example.entity.relations.OneToMany.JoinColumn.NotCascade;
 
 import javax.persistence.*;
 import java.util.Collections;
